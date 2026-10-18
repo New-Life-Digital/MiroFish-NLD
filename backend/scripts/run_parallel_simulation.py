@@ -1031,9 +1031,17 @@ def create_model(config: Dict[str, Any], use_boost: bool = False):
     
     print(f"{config_label} model={llm_model}, base_url={llm_base_url[:40] if llm_base_url else 'default'}...")
     
+    # NLD: Denkbudget für Gemini begrenzen (z. B. LLM_REASONING_EFFORT=low), sonst Standard-Denken
+    model_config = None
+    reasoning_effort = os.environ.get("LLM_REASONING_EFFORT")
+    if reasoning_effort:
+        from camel.configs import ChatGPTConfig
+        model_config = ChatGPTConfig(reasoning_effort=reasoning_effort).as_dict()
+
     return ModelFactory.create(
         model_platform=ModelPlatformType.OPENAI,
         model_type=llm_model,
+        model_config_dict=model_config,
     )
 
 

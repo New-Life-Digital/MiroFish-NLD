@@ -22,7 +22,8 @@ class Config:
 
     # Flask configuration
     SECRET_KEY = os.environ.get('SECRET_KEY', 'mirofish-secret-key')
-    DEBUG = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
+    # NLD: Debug standardmäßig aus (Werkzeug-Debugger erlaubt Codeausführung), nur lokal per FLASK_DEBUG=True
+    DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
 
     # JSON configuration - disable ASCII escaping to display Chinese directly (not as \uXXXX)
     JSON_AS_ASCII = False

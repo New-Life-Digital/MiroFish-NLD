@@ -1514,6 +1514,11 @@ def start_simulation():
                     "error": "max_rounds Must be valid integer"
                 }), 400
 
+        # NLD: Obergrenze für Runden (z. B. MAX_ROUNDS_CAP=30), sonst laufen ohne Angabe 120+ Runden auf Kosten des Budgets
+        rounds_cap = int(os.environ.get('MAX_ROUNDS_CAP', '0'))
+        if rounds_cap and (max_rounds is None or max_rounds > rounds_cap):
+            max_rounds = rounds_cap
+
         if platform not in ['twitter', 'reddit', 'parallel']:
             return jsonify({
                 "success": False,

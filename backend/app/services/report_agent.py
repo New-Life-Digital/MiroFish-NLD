@@ -856,6 +856,13 @@ Prediction Condition: {simulation_requirement}
 - Give conclusions first, then explain reasons
 - ALWAYS respond in English, regardless of the language used in source material or report content"""
 
+# NLD: Berichtssprache per Env umstellen (z. B. REPORT_LANGUAGE=German), Standard bleibt Englisch
+_REPORT_LANGUAGE = os.environ.get('REPORT_LANGUAGE')
+if _REPORT_LANGUAGE:
+    PLAN_SYSTEM_PROMPT = PLAN_SYSTEM_PROMPT.replace("English", _REPORT_LANGUAGE)
+    SECTION_SYSTEM_PROMPT_TEMPLATE = SECTION_SYSTEM_PROMPT_TEMPLATE.replace("English", _REPORT_LANGUAGE)
+    CHAT_SYSTEM_PROMPT_TEMPLATE = CHAT_SYSTEM_PROMPT_TEMPLATE.replace("English", _REPORT_LANGUAGE)
+
 CHAT_OBSERVATION_SUFFIX = "\n\nPlease answer the question concisely."
 
 

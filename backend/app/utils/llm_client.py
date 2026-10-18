@@ -73,6 +73,11 @@ class LLMClient:
         if response_format:
             kwargs["response_format"] = response_format
 
+        # NLD: Thinking-Tokens von Gemini begrenzen, sonst frisst das Denken das max_tokens-Budget
+        reasoning_effort = os.environ.get('LLM_REASONING_EFFORT')
+        if reasoning_effort:
+            kwargs["reasoning_effort"] = reasoning_effort
+
         # For Ollama: pass num_ctx via extra_body to prevent prompt truncation
         if self._is_ollama() and self._num_ctx:
             kwargs["extra_body"] = {
