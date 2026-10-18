@@ -1,3 +1,6 @@
+> **NLD-Fassung (New Life Digital, Oktober 2026).** Geänderte Version von [nikmcfly/MiroFish-Offline](https://github.com/nikmcfly/MiroFish-Offline) für einen Workshop, Lizenz unverändert AGPL-3.0.
+> Änderungen ab 18.10.2026 (im Code mit `NLD:` markiert): Gemini-Denkbudget per `LLM_REASONING_EFFORT` (auch in den Simulationsskripten), Berichtssprache per `REPORT_LANGUAGE`, `FLASK_DEBUG` standardmäßig aus, Rundenobergrenze `MAX_ROUNDS_CAP`, Deploy-Paket für Google Cloud in [`deploy/`](deploy/) (Vertex-AI-Proxy, Docker Compose, Caddy mit Basic Auth).
+
 <div align="center">
 
 <img src="./static/image/mirofish-offline-banner.png" alt="MiroFish Offline" width="100%"/>

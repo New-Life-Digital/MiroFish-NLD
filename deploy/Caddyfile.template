@@ -1,0 +1,38 @@
+# Vorlage: vm/install-remote.sh setzt Domain, Quellcode-Link und Gruppen-Logins ein und schreibt deploy/Caddyfile
+__DOMAIN__ {
+	encode zstd gzip
+
+	# AGPL-3.0: geänderter Quellcode für alle Nutzenden ohne Login erreichbar
+	redir /quellcode __SOURCE_URL__
+
+	# Ein Login je Gruppe plus Leitung; der Name steht im Zugriffslog
+	basic_auth {
+__USERS__
+	}
+
+	# Löschen nur per SSH durch die Leitung, damit keine Gruppe fremde Läufe entfernt
+	@delete method DELETE
+	respond @delete "Löschen ist im Workshop gesperrt" 403
+
+	handle /api/* {
+		reverse_proxy backend:5001
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		-Server
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}

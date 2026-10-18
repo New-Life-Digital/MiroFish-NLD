@@ -1,0 +1,2 @@
+# Deploy-Dateien laufen auf Linux: immer LF, auch beim git archive unter Windows
+deploy/** text eol=lf

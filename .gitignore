@@ -59,3 +59,10 @@ backend/uploads/
 # Docker 数据
 data/backend/venv311/
 backend/venv311/
+
+# Workshop-Deploy (auf der VM erzeugt, enthält Passwörter)
+deploy/.env
+deploy/Caddyfile
+deploy/zugaenge.txt
+deploy/backups/
+mirofish-upload.tar.gz

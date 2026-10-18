@@ -21,3 +21,8 @@ frontend/dist
 frontend/.vite
 
 backend/uploads
+
+# Workshop-Deploy
+**/.env
+deploy/Caddyfile
+deploy/zugaenge.txt
