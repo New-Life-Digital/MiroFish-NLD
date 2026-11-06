@@ -42,6 +42,14 @@
 __DOMAIN__ {
 	encode zstd gzip
 	redir /quellcode __SOURCE_URL__
+
+	# Unterlagen für die Leitung (Zugangskarten mit Passwörtern), nur mit Login.
+	# Die Dateien liegen nur auf der VM in deploy/info/leitung/, nie im Repo.
+	@leitung path /leitung/*
+	basic_auth @leitung {
+		leitung __LEITUNG_HASH__
+	}
+
 	root * /srv-info
 	file_server
 	import sicherheit

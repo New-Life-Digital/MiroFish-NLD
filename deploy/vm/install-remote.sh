@@ -38,27 +38,8 @@ if [ ! -f zugaenge.txt ]; then
   chmod 600 zugaenge.txt
 fi
 
-declare -A HASH
-while read -r user pass _; do
-  HASH[$user]=$(docker run --rm caddy:2.10-alpine caddy hash-password --plaintext "$pass")
-done < <(tail -n +2 zugaenge.txt)
-
-# --- Caddyfile: Vorlage plus eine Seite je Gruppe
-{
-  sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__SOURCE_URL__#$SOURCE_URL#g" Caddyfile.template
-  for user in $TEAMS; do
-    echo
-    echo "$user.$DOMAIN {"
-    echo "	basic_auth {"
-    echo "		$user ${HASH[$user]}"
-    if [ "$user" != leitung ] && [ -n "${HASH[leitung]:-}" ]; then
-      echo "		leitung ${HASH[leitung]}"
-    fi
-    echo "	}"
-    echo "	import instanz backend-$user"
-    echo "}"
-  done
-} > Caddyfile
+# --- Caddyfile: Vorlage plus eine Seite je Gruppe (lädt Caddy neu, falls es läuft)
+bash vm/caddy.sh "$DOMAIN" "$SOURCE_URL" "$TEAMS"
 
 # --- Ein Backend je Gruppe, alle aus demselben Image
 {
