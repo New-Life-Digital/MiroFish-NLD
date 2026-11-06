@@ -1,21 +1,32 @@
-# Vorlage: vm/install-remote.sh setzt Domain, Quellcode-Link und Gruppen-Logins ein und schreibt deploy/Caddyfile
-__DOMAIN__ {
+# Vorlage: vm/install-remote.sh setzt Domain und Quellcode-Link ein, hängt je Gruppe eine Seite an
+# (<gruppe>.__DOMAIN__, eigenes Backend, eigener Login plus leitung) und schreibt deploy/Caddyfile.
+
+(sicherheit) {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		-Server
+	}
+	log {
+		output stdout
+		format json
+	}
+}
+
+# Eine Gruppen-Instanz. Aufruf: import instanz <backend-dienst>
+(instanz) {
 	encode zstd gzip
 
 	# AGPL-3.0: geänderter Quellcode für alle Nutzenden ohne Login erreichbar
 	redir /quellcode __SOURCE_URL__
 
-	# Ein Login je Gruppe plus Leitung; der Name steht im Zugriffslog
-	basic_auth {
-__USERS__
-	}
-
-	# Löschen nur per SSH durch die Leitung, damit keine Gruppe fremde Läufe entfernt
+	# Löschen nur per SSH durch die Leitung
 	@delete method DELETE
 	respond @delete "Löschen ist im Workshop gesperrt" 403
 
 	handle /api/* {
-		reverse_proxy backend:5001
+		reverse_proxy {args[0]}:5001
 	}
 
 	handle {
@@ -24,15 +35,14 @@ __USERS__
 		file_server
 	}
 
-	header {
-		Strict-Transport-Security "max-age=31536000"
-		X-Content-Type-Options nosniff
-		Referrer-Policy no-referrer
-		-Server
-	}
+	import sicherheit
+}
 
-	log {
-		output stdout
-		format json
-	}
+# Infoseite ohne Login: Links zu allen Gruppen, Ablauf, Spielregeln (keine Passwörter)
+__DOMAIN__ {
+	encode zstd gzip
+	redir /quellcode __SOURCE_URL__
+	root * /srv-info
+	file_server
+	import sicherheit
 }
